@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "4TW Style",
+  "description": "For creating and using custom themes on the 4TW writing page.",
+  "version": "0.1",
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_icon": "assets/icon.png"
+  }
+}
