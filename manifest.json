@@ -3,8 +3,20 @@
   "name": "4TW Style",
   "description": "For creating and using custom themes on the 4TW writing page.",
   "version": "0.1",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "sidePanel",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://app.4thewords.com/"
+  ],
   "action": {
-    "default_popup": "src/popup.html",
-    "default_icon": "assets/icon.png"
+    "default_icon": "assets/icon.png",
+    "default_title": "Click to open theme settings"
+  },
+  "background": {
+    "service_worker": "src/service-worker.js"
   }
 }
