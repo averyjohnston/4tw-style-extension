@@ -4,7 +4,7 @@ async function handleSubmit(e) {
   e.preventDefault();
   const data = new FormData(e.target);
   const {
-    textColor, fontFamily, fontSize, lineHeight,
+    textColor, fontFamily, fontURL, fontSize, lineHeight,
     pageBackground, pageWidth, pageMargin, pagePadding, pageBorderRadius,
     pageBorder, pageBorderLeft, pageBorderRight, pageBorderTop, pageBorderBottom,
     editorBackground
@@ -29,6 +29,10 @@ async function handleSubmit(e) {
         font-family: ${fontFamily} !important;
       }
     `;
+  }
+
+  if (fontURL !== '') {
+    newCSS += `@import url('${fontURL}');`;
   }
 
   if (fontSize !== '') {
