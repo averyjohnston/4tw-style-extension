@@ -5,12 +5,13 @@ async function handleSubmit(e) {
   const data = new FormData(e.target);
   const {
     textColor, fontFamily, fontSize, lineHeight,
-    pageBackground, pageWidth, pageMargin, pagePadding, pageBorder, pageBorderRadius,
+    pageBackground, pageWidth, pageMargin, pagePadding, pageBorderRadius,
+    pageBorder, pageBorderLeft, pageBorderRight, pageBorderTop, pageBorderBottom,
     editorBackground
   } = Object.fromEntries(data.entries());
 
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  let newCSS = ''; // final formatting won't be pretty, but we're prioritizing code readability
+  let newCSS = ''; // final formatting won't be pretty, but we're prioritizing code readability/extensibility
 
   // --- font ---
 
@@ -58,6 +59,28 @@ async function handleSubmit(e) {
 
   if (pageBorderRadius !== '') {
     newCSS += `#editorContent { border-radius: ${pageBorderRadius}; }`;
+  }
+
+  // --- page border ---
+
+  if (pageBorder !== '') {
+    newCSS += `#editorContent { border: ${pageBorder}; }`;
+  }
+
+  if (pageBorderLeft !== '') {
+    newCSS += `#editorContent { border-left: ${pageBorderLeft}; }`;
+  }
+
+  if (pageBorderRight !== '') {
+    newCSS += `#editorContent { border-right: ${pageBorderRight}; }`;
+  }
+
+  if (pageBorderTop !== '') {
+    newCSS += `#editorContent { border-top: ${pageBorderTop}; }`;
+  }
+
+  if (pageBorderBottom !== '') {
+    newCSS += `#editorContent { border-bottom: ${pageBorderBottom}; }`;
   }
 
   // --- editor ---
