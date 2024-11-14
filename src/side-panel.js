@@ -39,7 +39,22 @@ async function handleSubmit(e) {
   }
 
   if (fontURL !== '') {
-    newCSS += `@import url('${fontURL}');`;
+    // @import statement doesn't work from within insertCSS for some reason, maybe a scoping problem?
+    // inject the import directly into the page using a script instead
+    chrome.scripting.executeScript({
+      func: (fontURL) => {
+        const existingStyle = document.head.querySelector('#fourtw-style-extension-font');
+        if (existingStyle) existingStyle.remove();
+
+        document.head.insertAdjacentHTML('afterbegin', `
+          <style id="fourtw-style-extension-font">
+            @import url('${fontURL}');
+          </style>
+        `);
+      },
+      args: [fontURL],
+      target: { tabId: tab.id },
+    });
   }
 
   if (fontSize !== '') {
