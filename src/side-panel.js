@@ -17,7 +17,7 @@ async function handleSubmit(e) {
 
   if (textColor !== '') {
     newCSS += `
-      .super-editor-content-wrapper, #editorContent p span, #editorContent p font {
+      .super-editor-content-wrapper, #editorContent p span, #editorContent p font, #editorContent p b {
         color: ${textColor} !important;
       }
     `;
@@ -25,7 +25,7 @@ async function handleSubmit(e) {
 
   if (fontFamily !== '') {
     newCSS += `
-      .editor-content-wrapper, .mediumEditorSpace p, #editorContent p span, #editorContent p font {
+      .editor-content-wrapper, .mediumEditorSpace p, #editorContent p span, #editorContent p font, #editorContent p b {
         font-family: ${fontFamily} !important;
       }
     `;
