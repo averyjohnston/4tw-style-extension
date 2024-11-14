@@ -1,3 +1,10 @@
+// TODO: theme creation/saving
+// have a dropdown of all saved themes, with buttons to load, delete, or overwrite with current form data
+// save them as a list of values for all form fields
+
+// TODO: import/export of all themes as JSON or whatever
+// needed for moving between computers, among other things
+
 let previousCSS = '';
 
 async function handleSubmit(e) {
