@@ -1,3 +1,5 @@
+// TODO: keep track of all values and restore them if panel is closed/opened
+
 // TODO: theme creation/saving
 // have a dropdown of all saved themes, with buttons to load, delete, or overwrite with current form data
 // save them as a list of values for all form fields
