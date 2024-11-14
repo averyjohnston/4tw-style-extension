@@ -1,0 +1,17 @@
+form {
+  display: flex;
+
+  flex-direction: column;
+}
+
+label {
+  display: flex;
+  margin-bottom: 12px;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+p {
+  margin: 0;
+}
