@@ -4,6 +4,22 @@ form {
   flex-direction: column;
 }
 
+.theme-select, .theme-controls {
+  width: 100%;
+}
+
+.theme-select {
+  margin-top: 12px;
+}
+
+.theme-controls {
+  display: flex;
+}
+
+.theme-controls button {
+  flex: 1 1 0px;
+}
+
 label {
   display: flex;
   margin-bottom: 8px;
@@ -23,6 +39,6 @@ p {
   margin: 0;
 }
 
-button {
+.submit-button {
   margin-top: 8px;
 }
