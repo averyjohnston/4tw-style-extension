@@ -5,19 +5,7 @@
 // TODO: import/export of all themes as JSON or whatever
 // needed for moving between computers, among other things
 
-// restore input values from the last time the panel was opened
-document.querySelectorAll('form input').forEach(input => {
-  const key = 'latest-' + input.name;
-  chrome.storage.local.get(key, result => {
-    if (result[key]) input.value = result[key];
-  });
-});
-
-// restore previous... previous CSS in case panel was closed and reopened without refreshing page
 let previousCSS = '';
-chrome.storage.local.get('previousCSS', result => {
-  if (result.previousCSS) previousCSS = result.previousCSS;
-});
 
 // inject CSS according to form values
 async function handleSubmit(e) {
@@ -160,5 +148,17 @@ function saveInputState(input) {
   chrome.storage.local.set({ [key]: value });
 }
 
-document.querySelector('form').addEventListener('submit', handleSubmit);
-document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
+chrome.storage.local.get(null, (storage) => {
+  // restore input values from the last time the panel was opened
+  document.querySelectorAll('form input').forEach(input => {
+    const key = 'latest-' + input.name;
+    if (storage[key]) input.value = storage[key];
+  });
+
+  // restore previous CSS in case panel was closed and reopened without refreshing page
+  if (storage.previousCSS) previousCSS = storage.previousCSS;
+
+  // set up behavior
+  document.querySelector('form').addEventListener('submit', handleSubmit);
+  document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
+});
