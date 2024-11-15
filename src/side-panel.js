@@ -162,6 +162,19 @@ function convertFormToObject() {
   return entriesWithValue;
 }
 
+// helper func that takes key/value pairs of form values and applies them to the form
+// also wipes fields that aren't in the given data
+function applyObjectToForm(formData) {
+  document.querySelectorAll('form input').forEach(formField => {
+    const fieldName = formField.name;
+    if (formData[fieldName]) {
+      formField.value = formData[fieldName];
+    } else {
+      formField.value = '';
+    }
+  });
+}
+
 // create and save a new theme using current form values
 function createNewTheme() {
   const themeName = window.prompt('A new theme will be created using the current form values. Enter theme name:');
@@ -178,7 +191,20 @@ function createNewTheme() {
   themeSelect.value = themeName;
 }
 
+// load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
+  // apply selected theme to form and submit it
+  function loadTheme() {
+    const response = window.confirm('Are you sure you want to load this theme? Any previous field values will be erased.');
+    if(!response) return;
+
+    const themeName = document.querySelector('.theme-select').value;
+    const formData = storage['theme-' + themeName];
+    applyObjectToForm(JSON.parse(formData));
+
+    document.querySelector('.submit-button').click();
+  }
+
   // restore input values from the last time the panel was opened
   document.querySelectorAll('form input').forEach(input => {
     const key = 'latest-' + input.name;
@@ -210,6 +236,7 @@ chrome.storage.local.get(null, (storage) => {
 
   // set up behavior
   document.querySelector('#theme-new').addEventListener('click', createNewTheme);
+  document.querySelector('#theme-load').addEventListener('click', loadTheme);
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
 });
