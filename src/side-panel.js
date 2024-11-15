@@ -237,6 +237,28 @@ function renameTheme() {
   chrome.storage.local.remove('theme-' + oldThemeName);
 }
 
+function deleteTheme() {
+  const themeSelect = document.querySelector('.theme-select');
+  const themeName = themeSelect.value;
+  if (themeName === 'Select a theme...') return; // bail if default option is selected
+
+  const response = window.confirm('Are you sure you want to delete this theme? This cannot be undone.');
+  if (!response) return;
+
+  // remove dropdown option
+  const themeOption = themeSelect.querySelector(`option[value='${themeName}']`);
+  themeOption.remove();
+
+  // if that was the last option, select the default option instead of leaving the dropdown empty
+  if (themeSelect.querySelectorAll('option').length === 1) {
+    themeSelect.value = 'Select a theme...';
+  }
+
+  // remove from local data and storage
+  delete themes[themeName];
+  chrome.storage.local.remove('theme-' + themeName);
+}
+
 // load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
   // restore input values from the last time the panel was opened
@@ -273,6 +295,7 @@ chrome.storage.local.get(null, (storage) => {
   document.querySelector('#theme-load').addEventListener('click', loadTheme);
   document.querySelector('#theme-save').addEventListener('click', overwriteTheme);
   document.querySelector('#theme-rename').addEventListener('click', renameTheme);
+  document.querySelector('#theme-delete').addEventListener('click', deleteTheme);
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
 });
