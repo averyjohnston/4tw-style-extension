@@ -172,20 +172,22 @@ function applyObjectToForm(formData) {
   });
 }
 
-// create and save a new theme using current form values
+// create and save a new theme, and wipe all fields
 function createNewTheme() {
-  const themeName = window.prompt('A new theme will be created using the current form values. Enter theme name:');
+  const themeName = window.prompt('A new blank theme will be created. Any previous field values will be erased. Enter theme name:');
   if (!themeName || themeName === '') return;
 
   // save theme to local data as well as storage
-  const formData = convertFormToObject();
-  themes[themeName] = formData;
-  chrome.storage.local.set({ ['theme-' + themeName]: JSON.stringify(formData) });
+  themes[themeName] = {};
+  chrome.storage.local.set({ ['theme-' + themeName]: '{}' });
 
   // add an entry to the dropdown and select it
   const themeSelect = document.querySelector('.theme-select');
   themeSelect.insertAdjacentHTML('beforeend', `<option value="${themeName}">${themeName}</option>`);
   themeSelect.value = themeName;
+
+  // wipe all form fields
+  document.querySelectorAll('form input').forEach(field => field.value = '');
 }
 
 // apply selected theme to form and submit it
