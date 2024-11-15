@@ -142,6 +142,7 @@ async function handleSubmit(e) {
   chrome.storage.local.set({ previousCSS });
 }
 
+// store value of input to persist it between panel openings
 function saveInputState(input) {
   const key = 'latest-' + input.name;
   const value = input.value;
