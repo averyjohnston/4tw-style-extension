@@ -1,6 +1,5 @@
 // TODO: theme creation/saving
 // have a dropdown of all saved themes, with buttons to load, delete, or overwrite with current form data
-// loading a theme should trigger a save on all form fields, like with the change event
 // also need to check for the default option
 
 // TODO: import/export of all themes as JSON or whatever
@@ -172,6 +171,8 @@ function applyObjectToForm(formData) {
     } else {
       formField.value = '';
     }
+
+    saveInputState(formField);
   });
 }
 
