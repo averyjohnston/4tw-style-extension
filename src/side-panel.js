@@ -215,6 +215,28 @@ function overwriteTheme() {
   chrome.storage.local.set({ ['theme-' + themeName]: JSON.stringify(formData) });
 }
 
+function renameTheme() {
+  const themeSelect = document.querySelector('.theme-select');
+  const oldThemeName = themeSelect.value;
+  if (oldThemeName === 'Select a theme...') return; // bail if default option is selected
+
+  const newThemeName = window.prompt('Enter new name for this theme:');
+  if (!newThemeName) return;
+
+  // update dropdown option
+  const themeOption = themeSelect.querySelector(`option[value='${oldThemeName}']`);
+  themeOption.value = newThemeName;
+  themeOption.innerText = newThemeName;
+
+  // update local data
+  themes[newThemeName] = { ...themes[oldThemeName] };
+  delete themes[oldThemeName];
+
+  // update storage
+  chrome.storage.local.set({ ['theme-' + newThemeName]: JSON.stringify(themes[newThemeName]) });
+  chrome.storage.local.remove('theme-' + oldThemeName);
+}
+
 // load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
   // restore input values from the last time the panel was opened
@@ -250,6 +272,7 @@ chrome.storage.local.get(null, (storage) => {
   document.querySelector('#theme-new').addEventListener('click', createNewTheme);
   document.querySelector('#theme-load').addEventListener('click', loadTheme);
   document.querySelector('#theme-save').addEventListener('click', overwriteTheme);
+  document.querySelector('#theme-rename').addEventListener('click', renameTheme);
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
 });
