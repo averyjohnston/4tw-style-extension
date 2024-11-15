@@ -1,5 +1,6 @@
 // TODO: import/export of all themes as JSON or whatever
 // needed for moving between computers, among other things
+// also export everything before packing extension, just in case storage changes
 
 let previousCSS = '';
 const themes = {};
@@ -122,7 +123,11 @@ async function handleSubmit(e) {
   // --- combined ---
 
   if (pageBackground !== '' || editorBackground !== '') {
-    newCSS += `#editorContent p span, #editorContent p font { background-color: transparent !important; }`;
+    newCSS += `
+      #editorContent p span, #editorContent p font, #editorContent p b {
+        background-color: transparent !important;
+      }
+    `;
   }
 
   chrome.scripting.removeCSS({
