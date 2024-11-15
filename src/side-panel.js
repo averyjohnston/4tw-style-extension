@@ -1,11 +1,17 @@
-// TODO: keep track of all values and restore them if panel is closed/opened
-
 // TODO: theme creation/saving
 // have a dropdown of all saved themes, with buttons to load, delete, or overwrite with current form data
 // save them as a list of values for all form fields
 
 // TODO: import/export of all themes as JSON or whatever
 // needed for moving between computers, among other things
+
+// restore input values from the last time the panel was opened
+document.querySelectorAll('form input').forEach(input => {
+  const key = 'latest-' + input.name;
+  chrome.storage.local.get(key, result => {
+    if (result[key]) input.value = result[key];
+  });
+});
 
 let previousCSS = '';
 
@@ -142,4 +148,11 @@ async function handleSubmit(e) {
   previousCSS = newCSS;
 }
 
+function saveInputState(input) {
+  const key = 'latest-' + input.name;
+  const value = input.value;
+  chrome.storage.local.set({ [key]: value });
+}
+
 document.querySelector('form').addEventListener('submit', handleSubmit);
+document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
