@@ -56,7 +56,7 @@ async function handleSubmit(e) {
   }
 
   if (fontSize !== '') {
-    newCSS += `.super-editor-content-wrapper { font-size: ${fontSize}; }`;
+    newCSS += `.mediumEditorSpace p { font-size: ${fontSize} !important; }`;
   }
 
   if (lineHeight !== '') {
