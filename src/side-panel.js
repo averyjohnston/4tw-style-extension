@@ -1,12 +1,13 @@
 // TODO: theme creation/saving
 // have a dropdown of all saved themes, with buttons to load, delete, or overwrite with current form data
-// save them as a list of values for all form fields
 // loading a theme should trigger a save on all form fields, like with the change event
+// also need to check for the default option
 
 // TODO: import/export of all themes as JSON or whatever
 // needed for moving between computers, among other things
 
 let previousCSS = '';
+const themes = {};
 
 // inject CSS according to form values
 async function handleSubmit(e) {
@@ -150,6 +151,33 @@ function saveInputState(input) {
   chrome.storage.local.set({ [key]: value });
 }
 
+// helper func that returns an object containing key/value pairs for any form fields with a value
+function convertFormToObject() {
+  const form = document.querySelector('form');
+  const data = new FormData(form);
+  const entries = Object.fromEntries(data.entries());
+  const entriesWithValue = Object.keys(entries).filter(key => entries[key] !== '')
+    .reduce((result, key) => (result[key] = entries[key].toString(), result), {});
+
+  return entriesWithValue;
+}
+
+// create and save a new theme using current form values
+function createNewTheme() {
+  const themeName = window.prompt('A new theme will be created using the current form values. Enter theme name:');
+  if (!themeName || themeName === '') return;
+
+  // save theme to local data as well as storage
+  const formData = JSON.stringify(convertFormToObject());
+  themes[themeName] = formData;
+  chrome.storage.local.set({ ['theme-' + themeName]: formData });
+
+  // add an entry to the dropdown and select it
+  const themeSelect = document.querySelector('.theme-select');
+  themeSelect.insertAdjacentHTML('beforeend', `<option value="${themeName}">${themeName}</option>`);
+  themeSelect.value = themeName;
+}
+
 chrome.storage.local.get(null, (storage) => {
   // restore input values from the last time the panel was opened
   document.querySelectorAll('form input').forEach(input => {
@@ -161,7 +189,6 @@ chrome.storage.local.get(null, (storage) => {
   if (storage.previousCSS) previousCSS = storage.previousCSS;
 
   // load saved themes
-  const themes = {};
   const themeKeys = Object.keys(storage).filter(key => key.indexOf('theme-') === 0);
   themeKeys.forEach(key => {
     themes[key.replace('theme-', '')] = JSON.parse(storage[key]);
@@ -170,6 +197,7 @@ chrome.storage.local.get(null, (storage) => {
   // if no themes are present, start with a default one
   if (Object.keys(themes).length === 0) {
     themes['No theme'] = {};
+    chrome.storage.local.set({ 'theme-No theme': '{}' });
   }
 
   // add themes to dropdown
@@ -180,7 +208,8 @@ chrome.storage.local.get(null, (storage) => {
     `);
   });
 
-  // set up form behavior
+  // set up behavior
+  document.querySelector('#theme-new').addEventListener('click', createNewTheme);
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
 });
