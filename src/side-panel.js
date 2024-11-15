@@ -178,14 +178,28 @@ function createNewTheme() {
   if (!themeName || themeName === '') return;
 
   // save theme to local data as well as storage
-  const formData = JSON.stringify(convertFormToObject());
+  const formData = convertFormToObject();
   themes[themeName] = formData;
-  chrome.storage.local.set({ ['theme-' + themeName]: formData });
+  chrome.storage.local.set({ ['theme-' + themeName]: JSON.stringify(formData) });
 
   // add an entry to the dropdown and select it
   const themeSelect = document.querySelector('.theme-select');
   themeSelect.insertAdjacentHTML('beforeend', `<option value="${themeName}">${themeName}</option>`);
   themeSelect.value = themeName;
+}
+
+// apply selected theme to form and submit it
+function loadTheme() {
+  const themeName = document.querySelector('.theme-select').value;
+  if (themeName === 'Select a theme...') return; // bail if default option is selected
+
+  const response = window.confirm('Are you sure you want to load this theme? Any previous field values will be erased.');
+  if (!response) return;
+
+  const formData = themes[themeName];
+  applyObjectToForm(formData);
+
+  document.querySelector('.submit-button').click();
 }
 
 // overwrite the currently selected theme with current form values
@@ -196,27 +210,13 @@ function overwriteTheme() {
   const response = window.confirm('Are you sure you want to overwrite this theme with the current form values? This cannot be undone.');
   if (!response) return;
 
-  const formData = JSON.stringify(convertFormToObject());
+  const formData = convertFormToObject();
   themes[themeName] = formData;
-  chrome.storage.local.set({ ['theme-' + themeName]: formData });
+  chrome.storage.local.set({ ['theme-' + themeName]: JSON.stringify(formData) });
 }
 
 // load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
-  // apply selected theme to form and submit it
-  function loadTheme() {
-    const themeName = document.querySelector('.theme-select').value;
-    if (themeName === 'Select a theme...') return; // bail if default option is selected
-
-    const response = window.confirm('Are you sure you want to load this theme? Any previous field values will be erased.');
-    if (!response) return;
-
-    const formData = storage['theme-' + themeName];
-    applyObjectToForm(JSON.parse(formData));
-
-    document.querySelector('.submit-button').click();
-  }
-
   // restore input values from the last time the panel was opened
   document.querySelectorAll('form input').forEach(input => {
     const key = 'latest-' + input.name;
