@@ -14,6 +14,9 @@ document.querySelectorAll('form input').forEach(input => {
 });
 
 let previousCSS = '';
+chrome.storage.local.get('previousCSS', result => {
+  if (result.previousCSS) previousCSS = result.previousCSS;
+});
 
 async function handleSubmit(e) {
   e.preventDefault();
@@ -146,6 +149,7 @@ async function handleSubmit(e) {
   });
 
   previousCSS = newCSS;
+  chrome.storage.local.set({ previousCSS });
 }
 
 function saveInputState(input) {
