@@ -13,11 +13,13 @@ document.querySelectorAll('form input').forEach(input => {
   });
 });
 
+// restore previous... previous CSS in case panel was closed and reopened without refreshing page
 let previousCSS = '';
 chrome.storage.local.get('previousCSS', result => {
   if (result.previousCSS) previousCSS = result.previousCSS;
 });
 
+// inject CSS according to form values
 async function handleSubmit(e) {
   e.preventDefault();
   const data = new FormData(e.target);
