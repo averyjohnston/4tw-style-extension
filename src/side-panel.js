@@ -188,6 +188,19 @@ function createNewTheme() {
   themeSelect.value = themeName;
 }
 
+// overwrite the currently selected theme with current form values
+function overwriteTheme() {
+  const themeName = document.querySelector('.theme-select').value;
+  if (themeName === 'Select a theme...') return; // bail if default option is selected
+
+  const response = window.confirm('Are you sure you want to overwrite this theme with the current form values? This cannot be undone.');
+  if (!response) return;
+
+  const formData = JSON.stringify(convertFormToObject());
+  themes[themeName] = formData;
+  chrome.storage.local.set({ ['theme-' + themeName]: formData });
+}
+
 // load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
   // apply selected theme to form and submit it
@@ -196,7 +209,7 @@ chrome.storage.local.get(null, (storage) => {
     if (themeName === 'Select a theme...') return; // bail if default option is selected
 
     const response = window.confirm('Are you sure you want to load this theme? Any previous field values will be erased.');
-    if(!response) return;
+    if (!response) return;
 
     const formData = storage['theme-' + themeName];
     applyObjectToForm(JSON.parse(formData));
@@ -236,6 +249,7 @@ chrome.storage.local.get(null, (storage) => {
   // set up behavior
   document.querySelector('#theme-new').addEventListener('click', createNewTheme);
   document.querySelector('#theme-load').addEventListener('click', loadTheme);
+  document.querySelector('#theme-save').addEventListener('click', overwriteTheme);
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
 });
