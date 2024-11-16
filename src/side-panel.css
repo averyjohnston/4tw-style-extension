@@ -42,3 +42,10 @@ p {
 .submit-button {
   margin-top: 8px;
 }
+
+.footer {
+  display: flex;
+  margin-top: 20px;
+
+  justify-content: space-around;
+}
