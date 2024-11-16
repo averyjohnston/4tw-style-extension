@@ -266,6 +266,21 @@ function deleteTheme() {
   chrome.storage.local.remove('theme-' + themeName);
 }
 
+// create and save txt file with themes exported as JSON
+function exportThemes() {
+  const a = document.createElement('a');
+  a.style = 'display: none';
+  document.body.appendChild(a);
+  const text = JSON.stringify(themes);
+  const blob = new Blob([text], { type: 'octet/stream' });
+  const url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.download = '4tw-style-themes-export.txt';
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.remove();
+}
+
 // load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
   // restore input values from the last time the panel was opened
@@ -305,4 +320,5 @@ chrome.storage.local.get(null, (storage) => {
   document.querySelector('#theme-delete').addEventListener('click', deleteTheme);
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
+  document.querySelector('#exportThemes').addEventListener('click', exportThemes);
 });
