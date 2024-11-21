@@ -29,6 +29,17 @@ async function handleSubmit(e) {
     `;
   }
 
+  if (fontFamily !== '' && fontURL === '') {
+    newCSS = `
+      @font-face {
+        font-family: ${fontFamily};
+        font-style: normal;
+        font-weight: normal;
+        src: local(${fontFamily});
+      }
+    ` + newCSS;
+  }
+
   if (fontFamily !== '') {
     newCSS += `
       .editor-content-wrapper, .mediumEditorSpace p, #editorContent p span, #editorContent p font, #editorContent p b {
