@@ -211,9 +211,6 @@ function loadTheme() {
   const themeName = document.querySelector('.theme-select').value;
   if (themeName === 'Select a theme...') return; // bail if default option is selected
 
-  const response = window.confirm('Are you sure you want to load this theme? Any previous field values will be erased.');
-  if (!response) return;
-
   const formData = themes[themeName];
   applyObjectToForm(formData);
 
