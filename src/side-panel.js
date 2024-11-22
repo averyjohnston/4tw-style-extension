@@ -1,7 +1,3 @@
-// TODO: import/export of all themes as JSON or whatever
-// needed for moving between computers, among other things
-// also export everything before packing extension, just in case storage changes
-
 let previousCSS = '';
 let themes = {};
 
