@@ -3,7 +3,7 @@
 // also export everything before packing extension, just in case storage changes
 
 let previousCSS = '';
-const themes = {};
+let themes = {};
 
 // inject CSS according to form values
 async function handleSubmit(e) {
@@ -289,6 +289,40 @@ function exportThemes() {
   a.remove();
 }
 
+// import themes as JSON
+// doesn't look like Chrome extensions have an API for loading files, so this'll have to do
+function importThemes() {
+  const text = window.prompt('This will replace ALL stored themes. WARNING: This cannot be undone! Proceed carefully!\n\nPaste the contents of the export file here:');
+  if (!text) return;
+
+  // note: this needs a lot more error checking/idiot-proofing before this extension should be shared publicly
+  const loadedThemes = JSON.parse(text);
+
+  // erase existing themes in storage
+  Object.keys(themes).forEach(themeName => {
+    chrome.storage.local.remove('theme-' + themeName);
+  });
+
+  // set new ones in storage
+  Object.keys(loadedThemes).forEach(loadedThemeName => {
+    chrome.storage.local.set({ ['theme-' + loadedThemeName]: JSON.stringify(loadedThemes[loadedThemeName]) });
+  });
+
+  // replace local themes wholesale
+  themes = {...loadedThemes};
+
+  // erase existing themes in dropdown
+  const themeSelect = document.querySelector('.theme-select');
+  themeSelect.innerHTML = '';
+
+  // add loaded themes to dropdown
+  Object.keys(loadedThemes).forEach(key => {
+    themeSelect.insertAdjacentHTML('beforeend', `
+      <option value="${key}">${key}</option>
+    `);
+  });
+}
+
 // load all storage at once, then do anything that needs it
 chrome.storage.local.get(null, (storage) => {
   // restore input values from the last time the panel was opened
@@ -329,4 +363,5 @@ chrome.storage.local.get(null, (storage) => {
   document.querySelector('form').addEventListener('submit', handleSubmit);
   document.querySelectorAll('form input').forEach(input => input.addEventListener('change', (e) => saveInputState(e.target)));
   document.querySelector('#exportThemes').addEventListener('click', exportThemes);
+  document.querySelector('#importThemes').addEventListener('click', importThemes);
 });
