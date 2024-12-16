@@ -6,7 +6,7 @@ async function handleSubmit(e) {
   e.preventDefault();
   const data = new FormData(e.target);
   const {
-    textColor, fontFamily, fontURL, fontSize, lineHeight,
+    textColor, fontFamily, fontURL, fontSize, fontWeight, lineHeight,
     pageBackground, pageWidth, pageMargin, pagePadding, pageBorderRadius,
     pageBorder, pageBorderLeft, pageBorderRight, pageBorderTop, pageBorderBottom,
     editorBackground
@@ -65,6 +65,10 @@ async function handleSubmit(e) {
 
   if (fontSize !== '') {
     newCSS += `.mediumEditorSpace p { font-size: ${fontSize} !important; }`;
+  }
+
+  if (fontWeight !== '') {
+    newCSS += `.mediumEditorSpace p { font-weight: ${fontWeight} !important; }`;
   }
 
   if (lineHeight !== '') {
