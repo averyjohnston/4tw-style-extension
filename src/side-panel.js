@@ -19,7 +19,7 @@ async function handleSubmit(e) {
 
   if (textColor !== '') {
     newCSS += `
-      .super-editor-content-wrapper, #editorContent p span, #editorContent p font, #editorContent p b {
+      .super-editor-content-wrapper, #editorContent p span, #editorContent p font, #editorContent p b, #editorContent p i {
         color: ${textColor} !important;
       }
     `;
@@ -38,7 +38,7 @@ async function handleSubmit(e) {
 
   if (fontFamily !== '') {
     newCSS += `
-      .editor-content-wrapper, .mediumEditorSpace p, #editorContent p span, #editorContent p font, #editorContent p b {
+      .editor-content-wrapper, .mediumEditorSpace p, #editorContent p span, #editorContent p font, #editorContent p b, #editorContent p i {
         font-family: ${fontFamily} !important;
       }
     `;
@@ -135,7 +135,7 @@ async function handleSubmit(e) {
 
   if (pageBackground !== '' || editorBackground !== '') {
     newCSS += `
-      #editorContent p span, #editorContent p font, #editorContent p b {
+      #editorContent p span, #editorContent p font, #editorContent p b, #editorContent p i {
         background-color: transparent !important;
       }
     `;
